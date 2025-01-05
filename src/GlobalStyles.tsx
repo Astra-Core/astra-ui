@@ -10,7 +10,6 @@ const GlobalStyles = () => (
         overflow: "hidden",
         padding: 0,
         fontFamily: "'Roboto', sans-serif",
-        backgroundColor: "#f4f6f8",
       },
       a: {
         textDecoration: "none",
