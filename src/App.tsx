@@ -1,15 +1,20 @@
-import {Typography} from "@mui/material";
+import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-const App = () => {
+import LoginPage from "./pages/LoginPage";
+import { CssBaseline } from "@mui/material";
+import GlobalStyles from "./GlobalStyles";
+
+const App: React.FC = () => {
   return (
-    <Router>
+    <>
+      <CssBaseline />
+      <GlobalStyles />
+      <Router>
         <Routes>
-          <Route
-            path="/"
-            element={<Typography variant="h4">Welcome to Astra</Typography>}
-          />
+          <Route path="/" element={<LoginPage />} />
         </Routes>
-    </Router>
+      </Router>
+    </>
   );
 };
 
