@@ -27,12 +27,10 @@ const useStyles = makeStyles()(() => ({
   title: {
     marginBottom: "20px",
     fontWeight: "bold",
-    color: "#24292e",
   },
   forgotPassword: {
     display: "block",
     margin: "10px 0",
-    color: "#0366d6",
     textAlign: "right",
     textDecoration: "none",
     "&:hover": {
@@ -48,7 +46,6 @@ const useStyles = makeStyles()(() => ({
   signup: {
     marginTop: "20px",
     fontSize: "0.9rem",
-    color: "#586069",
   },
 }));
 export default useStyles;

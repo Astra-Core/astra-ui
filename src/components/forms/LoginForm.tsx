@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { useForm, SubmitHandler } from "react-hook-form";
 import useStyles from "../../styles/loginFormStyles";
+import { apiClient } from "../../utils/apiClient";
 
 interface LoginFormInputs {
   username: string;
@@ -27,9 +28,15 @@ const LoginForm: React.FC = () => {
   const onSubmit: SubmitHandler<LoginFormInputs> = async (data) => {
     setIsLoading(true);
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log("Login Data: ", data);
+      const body = new URLSearchParams();
+      body.append("grant_type", "password");
+      body.append("username", data.username);
+      body.append("password", data.password);
+  
+      const response = await apiClient.post("/auth/token", body.toString(), {
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      });
+      console.log("Login Data:", response.data);
     } catch (error) {
       console.error("Login failed:", error);
     } finally {
@@ -59,6 +66,12 @@ const LoginForm: React.FC = () => {
               message: "Username must be at least 3 characters",
             },
           })}
+          slotProps={{
+            input: {
+              spellCheck: false,
+              autoCorrect: "off",
+            },
+          }}
           error={!!errors.username}
           helperText={errors.username?.message}
           disabled={isLoading}
