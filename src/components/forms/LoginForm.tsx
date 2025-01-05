@@ -6,39 +6,45 @@ import {
   Typography,
   Link,
   CircularProgress,
+  Alert,
 } from "@mui/material";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import useStyles from "../../styles/loginFormStyles";
 import { apiClient } from "../../utils/apiClient";
-
-interface LoginFormInputs {
-  username: string;
-  password: string;
-}
+import { LoginFormInputs } from "../../types/FormInputs";
+import { useAuth } from "../../context/AuthContext";
 
 const LoginForm: React.FC = () => {
   const { classes } = useStyles();
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormInputs>();
 
+  const { checkAuth } = useAuth();
   const onSubmit: SubmitHandler<LoginFormInputs> = async (data) => {
     setIsLoading(true);
+    setErrorMessage(null);
     try {
       const body = new URLSearchParams();
       body.append("grant_type", "password");
       body.append("username", data.username);
       body.append("password", data.password);
-  
+
       const response = await apiClient.post("/auth/token", body.toString(), {
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
       });
-      console.log("Login Data:", response.data);
+      document.cookie = `access_token=${response.data.access_token}`;
+      await checkAuth();
+      navigate("/home");
     } catch (error) {
       console.error("Login failed:", error);
+      setErrorMessage("Incorrect username or password");
     } finally {
       setIsLoading(false);
     }
@@ -49,6 +55,7 @@ const LoginForm: React.FC = () => {
       <Typography variant="h4" className={classes.title}>
         Sign in to Astra
       </Typography>
+      {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
       <form
         onSubmit={handleSubmit(onSubmit)}
         noValidate
